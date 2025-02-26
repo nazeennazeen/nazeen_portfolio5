@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nazeen Fuad Mohammed | Portfolio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #333333;
+            --accent-color: #666666;
+            --text-color: #ffffff;
+            --light-gray: #e0e0e0;
+        }
+        
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+        
+        #background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        .logo span {
+            color: var(--light-gray);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--light-gray);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .hero-title {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .hero-subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            color: var(--light-gray);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .hero-cta {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: var(--text-color);
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .hero-cta:hover {
+            background-color: var(--light-gray);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: var(--light-gray);
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .about-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.5s ease;
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .about-text {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        
+        .about-text p {
+            margin-bottom: 20px;
+        }
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .portfolio-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+        
+        .portfolio-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .portfolio-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .portfolio-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .portfolio-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .portfolio-item:hover .portfolio-info {
+            transform: translateY(0);
+        }
+        
+        .portfolio-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .portfolio-info p {
+            font-size: 14px;
+            color: var(--light-gray);
+        }
+        
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .skill-card {
+            background-color: var(--secondary-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .skill-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+        
+        .skill-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .skill-desc {
+            font-size: 14px;
+            color: var(--light-gray);
+            line-height: 1.6;
+        }
+        
+        .contact {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .contact-info-item i {
+            font-size: 24px;
+            color: var(--light-gray);
+        }
+        
+        .contact-info-text h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .contact-info-text p {
+            font-size: 16px;
+            color: var(--light-gray);
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            font-size: 14px;
+            color: var(--light-gray);
+        }
+        
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 56px;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 42px;
+            }
+            
+            .hero-subtitle {
+                font-size: 20px;
+            }
+            
+            .section-title {
+                font-size: 36px;
+            }
+            
+            .portfolio-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            
+            .section-title {
+                font-size: 30px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+        .download-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.download-btn:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-3px);
+}
+
+    </style>
+</head>
+<body>
+    <canvas id="background-canvas"></canvas>
+    
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">NAZEEN<span>.</span></div>
+                <div class="nav-links">
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#portfolio">Portfolio</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Nazeen Fuad Mohammed</h1>
+                <h2 class="hero-subtitle">Programmer and Graphic Designer, Expert in Arduino and Robotics</h2>
+                <a href="#portfolio" class="hero-cta">View My Work</a>
+            </div>
+        </div>
+    </section>
+    
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">About Me</h2>
+            <div class="about-content">
+                <div class="about-image fade-in">
+                    <img src="photo_2025-02-26_22-46-36.jpg" alt="Nazeen Fuad Mohammed">
+                </div>
+                <div class="about-text fade-in">
+                    <p>I am a top student in the Department of Computer Engineering at the Lebanese French University, Faculty of Engineering and Computer Science. With a strong proficiency in C++, I specialize in bridging the gap between software and hardware.</p>
+                    <p>As an Assistant and Administrator in the NICER Club—our university's leading student development club focused on robotics and hardware projects, I take charge of key tasks, driving innovation at the intersection of engineering and technology.</p>
+                    <p>My passion lies in transforming ideas into reality, creating seamless integration between software, hardware, and robotics to push the boundaries of engineering.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="portfolio" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">My Portfolio</h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-item fade-in">
+                    <img src="20241205_121612.jpg" alt="Home System Project">
+                    <div class="portfolio-info">
+                        <h3>Home System</h3>
+                        <p>Arduino-based home automation system with lighting sensors</p>
+                    </div>
+                </div>
+                <div class="portfolio-item fade-in">
+                    <img src="photo_2025-02-26_22-48-33.jpg" alt="School Management Software">
+                    <div class="portfolio-info">
+                        <h3>School Management Software</h3>
+                        <p>Complete system ready for market deployment</p>
+                    </div>
+                </div>
+                <div class="portfolio-item fade-in">
+                    <img src="IMG_0047.PNG" alt="Graphic Design">
+                    <div class="portfolio-info">
+                        <h3>Graphic Design</h3>
+                        <p>Posters and social media content</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="skills" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Experience & Skills</h2>
+            <div class="skills-container">
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">💻</div>
+                    <h3 class="skill-title">Programming</h3>
+                    <p class="skill-desc">Proficient in C++, MATLAB, and MS Office suite. Experience with hardware-software integration.</p>
+                </div>
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">🤖</div>
+                    <h3 class="skill-title">Robotics</h3>
+                    <p class="skill-desc">Extensive experience with Arduino and robotics projects through the NICER Club.</p>
+                </div>
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">🎨</div>
+                    <h3 class="skill-title">Design</h3>
+                    <p class="skill-desc">Skilled in Adobe Photoshop, creating posters and social media content.</p>
+                </div>
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">🗣️</div>
+                    <h3 class="skill-title">Languages</h3>
+                    <p class="skill-desc">Native Kurdish, fluent English, and beginner Arabic.</p>
+                </div>
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">📊</div>
+                    <h3 class="skill-title">Management</h3>
+                    <p class="skill-desc">Experience in marketing, leadership training, and managing tough situations.</p>
+                </div>
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">💡</div>
+                    <h3 class="skill-title">Innovation</h3>
+                    <p class="skill-desc">Developing ideas for software, physical games, and hardware projects.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact" class="section contact">
+        <div class="container">
+            <h2 class="section-title fade-in">Contact Me</h2>
+            <div class="contact-content">
+                <div class="contact-info fade-in">
+                    <div class="contact-info-item">
+                        <i>📱</i>
+                        <div class="contact-info-text">
+                            <h4>Phone</h4>
+                            <p>07505647717</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <i>📧</i>
+                        <div class="contact-info-text">
+                            <h4>Email</h4>
+                            <p>Nazeenfuad0@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <i>📄</i>
+                        <div class="contact-info-text">
+                            <h4>Resume</h4>
+                            <p><a href="cv eng.nazeen.pdf" target="_blank" class="download-btn">Opne my CV</a></p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                
+                <div class="copyright">
+                    © 2025 Nazeen Fuad Mohammed. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Background animation with Three.js
+        let scene, camera, renderer;
+        let particles, geometry, materials = [], parameters, i, h, color;
+        
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
+            camera.position.z = 1000;
+            
+            geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            
+            const textureLoader = new THREE.TextureLoader();
+            
+            for (i = 0; i < 1000; i++) {
+                const x = Math.random() * 2000 - 1000;
+                const y = Math.random() * 2000 - 1000;
+                const z = Math.random() * 2000 - 1000;
+                vertices.push(x, y, z);
+            }
+            
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            
+            parameters = [
+                [[0.2, 0.2, 0.2], 5],
+                [[0.4, 0.4, 0.4], 4],
+                [[0.6, 0.6, 0.6], 3],
+                [[0.8, 0.8, 0.8], 2],
+                [[1.0, 1.0, 1.0], 1]
+            ];
+            
+            for (i = 0; i < parameters.length; i++) {
+                color = parameters[i][0];
+                size = parameters[i][1];
+                
+                materials[i] = new THREE.PointsMaterial({
+                    size: size,
+                    color: new THREE.Color(color[0], color[1], color[2])
+                });
+                
+                particles = new THREE.Points(geometry, materials[i]);
+                particles.rotation.x = Math.random() * 6;
+                particles.rotation.y = Math.random() * 6;
+                particles.rotation.z = Math.random() * 6;
+                scene.add(particles);
+            }
+            
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('background-canvas'), alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            window.addEventListener('resize', onWindowResize, false);
+            
+            animate();
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            for (i = 0; i < scene.children.length; i++) {
+                const object = scene.children[i];
+                if (object instanceof THREE.Points) {
+                    object.rotation.y = Date.now() * 0.00005 * (i < 4 ? i + 1 : -(i + 1));
+                }
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Fade in animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+        
+        // Hero animations
+        window.addEventListener('load', () => {
+            const heroContent = document.querySelector('.hero-content');
+            const heroTitle = document.querySelector('.hero-title');
+            const heroSubtitle = document.querySelector('.hero-subtitle');
+            const heroCta = document.querySelector('.hero-cta');
+            
+            gsap.to(heroContent, { opacity: 1, y: 0, duration: 1, delay: 0.5 });
+            gsap.to(heroTitle, { opacity: 1, y: 0, duration: 1, delay: 0.8 });
+            gsap.to(heroSubtitle, { opacity: 1, y: 0, duration: 1, delay: 1.1 });
+            gsap.to(heroCta, { opacity: 1, y: 0, duration: 1, delay: 1.4 });
+            
+            init(); // Initialize Three.js background
+        });
+    </script>
+</body>
+</html>
